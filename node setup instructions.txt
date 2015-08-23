@@ -219,7 +219,7 @@ Then added the rest of the project to github
  1189  git commit -m "Adding the project for first time"
  1192  git push origin master		//This is what actually pushed it to github remote
 
-
+Download Heroku toolbelt: https://devcenter.heroku.com/articles/getting-started-with-nodejs#set-up
 
 
 

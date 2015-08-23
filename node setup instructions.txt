@@ -199,6 +199,29 @@ https://help.github.com/articles/generating-ssh-keys/
 
 I now have an ssh key in ~/.ssh/id_rsa.pub
 
+First added a single package.json to git hub to try things out:
+
+ 1154  git add package.json 
+ 1155  git commit -m "add package file only"
+ 1156  git remote add origin git@github.com:lowej/MEAN-Apps.git
+ 1157  git remote -v
+ 1158  git push origin master
+ 
+ 
+Then created a .gitignore file in top levle dir to ignore the node_modules files.
+
+Then added the rest of the project to github
+
+ 1183  git add *
+ 1185  git add .bowerrc 
+ 1186  git add .gitignore 
+ 1187  git status
+ 1189  git commit -m "Adding the project for first time"
+ 1192  git push origin master		//This is what actually pushed it to github remote
+
+
+
+
 
 
 

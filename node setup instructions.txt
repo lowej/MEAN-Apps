@@ -1,0 +1,211 @@
+
+| - gulpfile.js		//Gulp build file (section 6 of book)
+| - package.json	//file used at start to generate node_modules stuff
+| - server.js		//This is the main HTTP handler
+| - db.js			//This handles the connection to the mongoDB database
+| - config.js		//Config file for the application
+| - auth.js			//middleware - e.g. looking up user's information
+| - websockets.js	//server side web sockets connectivity.  Track who connected, broadcast to clients
+| - protractor.conf.js //Protractor configuration file (for testing)
+| - bower.json		//Bower dependency config
+| - .bowerrc		//Directs bower to put assets in assets folder, not its default
+| - karma.conf.js	//Configuration file for karma tests
+--|
+  - assets
+  	  |
+  	  - app.js  	//Angular java script broken out from html (Gulp now creates this by combining the 3 files in /ng
+--|
+  - controllers
+   		 |
+   		 - static.js  	//serves up the angular app - just delivers the html content
+   		 - index.js		//Added in chapter 11 - Base Router
+   		 |
+   		 - api
+   		 	|
+   		 	- posts.js  	//API and sendfile endpoints split out from server.js
+   		 	- sessions.js	//Something to do with authenticating the user
+   		 	- users.js		//Controller for getting existing users and posting new users
+--|
+  - models
+	  |
+	  - post.js //mongoose model that stores the post data (a BO).  For storing and retrieval to mongo
+	  - user.js	//Model to represent a user - used for authentication
+--|
+  - layout
+   	  |
+   	  - app.html //The html page for taking posts with the angular stuff embedded in it (was posts.html)
+--|
+  - templates
+   	  |
+   	  - posts.html  	//The bit for adding posts
+   	  - login.html		//The login form, obviously!
+   	  - register.html	//The register form, obviously!
+--|
+  - ng
+  	|
+  	- app.js  		//This is the version of app.js that gulp will build.  Assets is the target dir [REMOVED IN FAVOUR OF MODULARISED .JS FILES]
+  	- module.js  	//split out app.js
+  	- posts.ctrl.js //split out app.js
+  	- posts.svc.js	//split out app.js
+  	- routes.js		//defines the routes for the posts page, register page and login page
+  	- login.ctrl.js	//controller for the login form
+  	- user.svc.js	//Service for loging in a user and now registering as well
+  	- application.ctrl.js	//For getting the current user into scope
+  	- register.ctrl.js		//Controller for registration
+--|
+  - gulp
+  |
+  - css.js     //Gulp CSS build stuff
+  - server.js	//Used to run the application automatically
+--|
+  - test
+  	 |
+  	 - mocha.opts  //mocha config for the server/node unit tests
+  	 - e2e		//Dir for end 2 end tests - ***.spec.js tells Protractor to find the tests
+  	 	|
+  	 	- making_a_post.spec.js		//Tests logging in and making a post
+  	 - ng		//Dir for Angular tests
+  	 	|
+  	 	- posts.ctrl.spec.js	//Angular controller tests
+  	 	- posts.svc.spec.js		//Angular service tests
+  	 - server	//Dir for Node tests
+  	 	  |
+  	 	  - controllers
+  	 	  		|
+  	 	  		- api
+  	 	  		  	|
+  	 	  		  	- posts.spec.js	//Unit tests for the node posts controller
+  	 	  - support
+  	 	  		|
+  	 	  		- api.js	//wraps base router SuperTest
+  	 	  		- user.js	//Test support - creates an authenticated user
+		
+
+
+----------------
+
+
+How to create the node stuff
+
+Section 4 - The Stock Endpoint in book
+
+To start, you’ll use Node.js and Express to build a stock /api/posts endpoint. 
+First, inside a new folder, create a package.json file like the following:
+{
+  "name": "socialapp"
+}
+
+The name can be anything you want, but try to ensure it doesn’t conflict with an existing
+package. The package.json file is the only thing you need to make a directory a node project.
+Now that you have this, you can add express and body-parser as dependencies:
+Click here to view code image
+
+$ cd <path-to-project-folder>
+$ npm install --save express
+$ npm install --save body-parser
+
+
+
+-------------
+
+Start server "node server.js"
+
+Test the node api using SOAP UI.  Post the JSON in the curl json example.txt
+
+
+-------------
+Install Gulp  (section 6)
+
+sudo npm install --global gulp
+sudo npm install --save gulp
+npm install --save gulp-concat   //Didn't seem to need the sudo
+npm install --save gulp-uglify	 //Didn't seem to need the sudo
+npm install --save gulp-ng-annotate		//ensures the uglified code is correct
+npm install --save gulp-sourcemaps		//includes the source with the minified code so browser console can show errors.
+npm install --save gulp-stylus		//For CSS pre-processing
+npm install --save gulp-nodemon		//Runs the app for me
+
+
+***==> Can now start up the source change builders and server simply by typing 'gulp dev'<==***
+
+
+---------------
+
+npm install --save lodash	//java script util, used in this case for array element removal
+
+Use SOAP UI for testing HTTP connections to server
+Use Chrome and "Simple Web Socket Client" extension for testing web socket connections to server
+
+*****GO BACK IF HAVE TIME TO DO THE CHAPTER 9/WEBSOCKT ARCHTECTURE SECTION.  THIS DESCRIBES HOW TO SUPPORT > 1 SERVER INSTANCE USING PUB/SUB
+
+
+---------------
+Chapter 10 - Testing E2E with Selenium
+
+sudo npm install --save-dev protractor	//testing framework with Selenium
+sudo npm install --save-dev mocha		//Unit test framework
+sudo npm install --save-dev chai    	//Test expectations framework
+
+This tests the end to end stuff via the browser - more of a smoke test
+To run the protactor tester (and selenium) run: ./node_modules/.bin/protractor
+
+Didn't bother with the chai as promised stuff as it seemed to give marginal value 
+
+---------------
+Chapter 11 - Testing Node
+
+This tests the server side stuff
+To run: ./node_modules/.bin/mocha
+
+sudo npm install --save-dev supertest	//Allows interaction (for testing) with an express router like making http calls
+npm install --save morgan		//logger. not asked to install it though, just starts using it
+sudo npm install --save-dev jsonwebtoken	//Test support for creating authed users
+npm install --save-dev blanket		//Code coverage utility
+
+
+To run code coverage checker:
+./node_modules/.bin/mocha -R html-cov >coverage.html		//Then open up the coverage.html file
+
+
+
+Added a scripts section to package.json to allow all tests to be run using:
+npm test
+
+----------------
+Chapter 12 - Testing Angular
+
+npm install --global bower	//manages front end dependencies like npm manages backend
+
+sudo npm install --global karma-cli	//install karma stuff
+sudo npm install --save-dev karma	//install karma stuff
+sudo npm install --save-dev karma-chai karma-mocha karma-phantomjs-launcher
+
+//To start karma tests:
+karma start --single-run
+
+//Note - default 1.0.0 is bust, loaded old version after googling an issue
+//Ended up not using the tests in posts.ctrl.spec.js.  The changes to the real posts.ctrl.js file
+//required broke the app.  Just seeing '@' on the posts page.
+npm install --save-dev karma-sinon-chai@0.3.2  //To allow the test "Spies" stuff to work - functional coverage
+
+------------------
+Chapter 13 - 
+
+Git Hub setup
+
+Generating SSH keys to connect to repo, instructions:
+https://help.github.com/articles/generating-ssh-keys/
+(No passphrase entered when setting up key)
+
+I now have an ssh key in ~/.ssh/id_rsa.pub
+
+
+
+
+
+
+
+
+
+
+

@@ -222,6 +222,12 @@ Then added the rest of the project to github
 Download Heroku toolbelt: https://devcenter.heroku.com/articles/getting-started-with-nodejs#set-up
 
 
+Pushing application to heroku
+
+heroku create
+git push heroku master
+heroku open
+
 
 
 

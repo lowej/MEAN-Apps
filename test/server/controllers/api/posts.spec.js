@@ -70,5 +70,6 @@ describe('POST /api/posts', function () {
    afterEach(function(done){
   
 	  Post.remove({}, done)
+	  
   })
 })
